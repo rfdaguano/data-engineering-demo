@@ -123,7 +123,7 @@ to Redshift, but it did not work well in my experience.
 }
 ```
 
-### Setting up permissions for Amazon Redshift
+### Setting up IAM Role for permissions for Amazon Redshift
 
 IAM roles are used in AWS to associate permissions for resources to access and use other resources. In our case, an IAM
 role is necessary for the Redshift cluster to access the S3 buckets and load the data.
@@ -132,6 +132,20 @@ For simplicity and because this resource deals with security credentials, I pref
 manually create the IAM role through IAM -> Roles -> Create Role. The name of the IAM role is "myRedshiftRole", and the
 only permission is `AmazonS3ReadOnlyAccess`. The process will create the Role ARN, which is necessary when copying from
 S3.
+
+### Creating an Amazon Redshift cluster
+
+The processing of data will be conducted by a cluster of Amazon Redshift nodes, a scalable solution for Data Warehousing.
+The CLI command to create a cluster is in the format below. However, the actual cluster was created on the AWS website
+because the node type and number (1x dc2.large) were selected to keep within the limits of the Free Tier.
+
+Note that the ARN of the IAM Role created previously is associated to the cluster to allow access to the S3 buckets.
+
+```
+$ aws redshift create-cluster --node-type dc2.large --number-of-nodes 1 --master-username awsuser \
+> --master-user-password <password> --cluster-identifier mycluster --publicly-accessible --db-name dev \
+> --availability-zone us-east-2 --port 5439 --iam-roles <ARN of IAM Role>
+```
 
 x Instalado AWS CLI
 x Copiar arquivos baixados pro S3
