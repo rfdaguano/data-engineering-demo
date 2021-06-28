@@ -147,15 +147,123 @@ $ aws redshift create-cluster --node-type dc2.large --number-of-nodes 1 --master
 > --availability-zone us-east-2 --port 5439 --iam-roles <ARN of IAM Role>
 ```
 
+The Redshift cluster should be ready for the queries, that can be run from the Query Editor on the AWS website, or from
+an SQL client. The first queries to load the data from S3 will be run from the Query Editor. The later queries for the
+data analysis of the NYC trip data will be run from an SQL client implemented by the Python library "sqlalchemy".
+
+One last configuration to allow the connection from the external Python script is to allow outside connections in the
+cluster's security group, by adding an inbound rule.
+
+On the AWS website: Redshift -> mycluster -> Properties -> Security Group -> Inbound Rules -> Add rule for:
+`Type: All traffic, Source: My IP.`
+
+This security rule may be too lax for a production application, however, it is enough for this demonstration. Also, the
+AWS resources will be instantiated for a quick series of queries for data analysis and later deleted to avoid ongoing
+costs.
+
+### Copying the data from S3
+
+All the provided data will be loaded into Redshift as relational tables. The **Preliminary Analysis** section covered
+the discovery of the table headers for both the CSV and JSON files, the latter resulting in the `jsonpaths.json` file.
+
+The tables **vendors**, **payment** and **trips** were created with the queries below, directly in the AWS webpage
+Query Editor:
+
+```
+create table vendors(
+  vendor_id varchar(50),
+  name varchar(50),
+  address varchar(50),
+  city varchar(50),
+  state varchar(50),
+  zip varchar(50),
+  country varchar(50),
+  contact varchar(50),
+  current varchar(50)
+);
+
+create table payment(
+  payment_type varchar(20),
+  payment_lookup varchar(20)
+);
+
+create table trips(
+  vendor_id varchar(30),
+  pickup_datetime TIMESTAMP,
+  dropoff_datetime TIMESTAMP,
+  passenger_count INTEGER,
+  trip_distance FLOAT,
+  pickup_longitude FLOAT,
+  pickup_latitude FLOAT,
+  rate_code VARCHAR(20),
+  store_and_fwd_flag VARCHAR(30),
+  dropoff_longitude FLOAT,
+  dropoff_latitude FLOAT,
+  payment_type VARCHAR(30),
+  fare_amount FLOAT,
+  surcharge FLOAT,
+  tip_amount FLOAT,
+  tolls_amount FLOAT,
+  total_amount FLOAT
+);
+```
+
+The data from the S3 bucket was copied with the queries below. Note that the ARN Role that is associated with the
+Redshift cluster is necessary to successfully connect with S3:
+
+```
+copy vendors from 's3://my-bucket/data-vendor_lookup-csv.csv'
+credentials 'aws_iam_role=<ARN IAM Role>'
+ignoreheader 1
+delimiter ',' region 'us-east-2'
+CSV;
+
+copy payment from 's3://my-bucket/data-payment_lookup-csv.csv'
+credentials 'aws_iam_role=<ARN IAM Role>'
+ignoreheader 2
+delimiter ',' region 'us-east-2'
+CSV;
+
+copy trips from 's3://my-bucket/data-sample_data-nyctaxi-trips-2009-json_corrigido.json'
+credentials 'aws_iam_role=<ARN IAM Role>'
+TIMEFORMAT AS 'YYYY-MM-DDTHH:MI:SS'
+json 's3://my-bucket/jsonpaths.json';
+
+copy trips from 's3://my-bucket/data-sample_data-nyctaxi-trips-2010-json_corrigido.json'
+credentials 'aws_iam_role=<ARN IAM Role>'
+TIMEFORMAT AS 'YYYY-MM-DDTHH:MI:SS'
+json 's3://my-bucket/jsonpaths.json';
+
+copy trips from 's3://my-bucket/data-sample_data-nyctaxi-trips-2011-json_corrigido.json'
+credentials 'aws_iam_role=<ARN IAM Role>'
+TIMEFORMAT AS 'YYYY-MM-DDTHH:MI:SS'
+json 's3://my-bucket/jsonpaths.json';
+
+copy trips from 's3://my-bucket/data-sample_data-nyctaxi-trips-2012-json_corrigido.json'
+credentials 'aws_iam_role=<ARN IAM Role>'
+TIMEFORMAT AS 'YYYY-MM-DDTHH:MI:SS'
+json 's3://my-bucket/jsonpaths.json';
+```
+
+The cluster is now ready and load with data for the analysis! The next queries will be run by the `query_cluster.py`
+script. One last query that cleans up the 'Foo' lines in the payment table can be run still in the Query Editor:
+
+```
+delete from payment
+where payment_lookup='Foo';
+```
+
+## Setting up the Python environment
+
 x Instalado AWS CLI
 x Copiar arquivos baixados pro S3
 x Investigar tabelas para schemas
 x Upar também o jsonpaths
 x Criar o IAM Role para ler S3
-Criar o cluster Redshift (publicly available)
-Atribuir o Role ao Cluster
-Setar inbound permissions o security group
-Queries que criam e copiar tabelas (com ARN)
+x Criar o cluster Redshift (publicly available)
+x Atribuir o Role ao Cluster
+x Setar inbound permissions o security group
+x Queries que criam e copiar tabelas (com ARN)
 Remover o 'Foo' da payment_lookup
 
 Configurar ambiente python (incluindo variáveis de ambiente)
