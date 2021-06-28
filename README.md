@@ -67,16 +67,80 @@ The json files are large and therefore the "head" command is specially useful:
 ```
 
 ## Setting up the AWS resources
+### S3
 
+We started with a Linux computer with AWS CLI installed and the account/password already set. An S3 can be created with
+the command below. It is planned that Amazon Redshift will access the data from the bucket from within the default VPC,
+and as such I will use my-bucket as the name.
 
+```
+$ aws s3api create-bucket --bucket my-bucket --create-bucket-configuration LocationConstraint=us-east-2
+$ aws s3api put-public-access-block \
+> --bucket my-bucket \
+> --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+```
 
-Instalado AWS CLI
-Copiar arquivos baixados pro S3
-Investigar tabelas para schemas
-Upar também o jsonpaths
-Criar o IAM Role para ler S3
+All files are copied to S3 with the commands below. It is recommended to use the AWS CLI rather than the website
+interface for larger files.
+
+```
+$ aws s3 cp data-vendor_lookup-csv.csv s3://my-bucket/
+$ aws s3 cp data-payment_lookup-csv.csv s3://my-bucket/
+...
+```
+
+One extra file will be uploaded to S3, called `jsonpaths.json`, this file is required by Amazon Redshift to map the
+keys of the json data to column names for the relational database. There is an 'auto' option when copying data from S3
+to Redshift, but it did not work well in my experience.
+
+`jsonpaths.json` is written as follows and is also saved in this code repository:
+
+```
+{
+
+"jsonpaths": [
+
+"$['vendor_id']",
+"$['pickup_datetime']",
+"$['dropoff_datetime']",
+"$['passenger_count']",
+"$['trip_distance']",
+"$['pickup_longitude']",
+"$['pickup_latitude']",
+"$['rate_code']",
+"$['store_and_fwd_flag']",
+"$['dropoff_longitude']",
+"$['dropoff_latitude']",
+"$['payment_type']",
+"$['fare_amount']",
+"$['surcharge']",
+"$['tip_amount']",
+"$['tolls_amount']",
+"$['total_amount']"
+
+]
+
+}
+```
+
+### Setting up permissions for Amazon Redshift
+
+IAM roles are used in AWS to associate permissions for resources to access and use other resources. In our case, an IAM
+role is necessary for the Redshift cluster to access the S3 buckets and load the data.
+
+For simplicity and because this resource deals with security credentials, I preferred to access the AWS Dashboard and
+manually create the IAM role through IAM -> Roles -> Create Role. The name of the IAM role is "myRedshiftRole", and the
+only permission is `AmazonS3ReadOnlyAccess`. The process will create the Role ARN, which is necessary when copying from
+S3.
+
+x Instalado AWS CLI
+x Copiar arquivos baixados pro S3
+x Investigar tabelas para schemas
+x Upar também o jsonpaths
+x Criar o IAM Role para ler S3
 Criar o cluster Redshift (publicly available)
 Atribuir o Role ao Cluster
+Setar inbound permissions o security group
 Queries que criam e copiar tabelas (com ARN)
 Remover o 'Foo' da payment_lookup
 
