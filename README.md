@@ -253,7 +253,39 @@ delete from payment
 where payment_lookup='Foo';
 ```
 
-## Setting up the Python environment
+## Setting up the Python environment and running the main script
+
+Setting up the python enviroment to run the SQL client requires few steps. The script runs on Python3.7 and the user
+can use a virtual environment if preferred. The required packages can be directly installed through PIP with the
+`requirements.txt` file.
+
+```
+$ sudo apt-get install python3.7
+$ sudo apt-get install python3.7-dev
+$ sudo apt-get install python3-pip
+$ pip3 install -r requirements.txt
+```
+
+The `query_cluster.py` script uses the "sqlalchemy" library to create an SQL client. This instantiation requires
+credentials to the cluster, and for security issues, those can be loaded from environment variables. It is therefore
+necessary to load the database name, master user, master password, port and host url from when the cluster was created:
+
+```
+$ export AWS_USER=<aws_user>
+$ export AWS_PASSWORD=<aws_password>
+$ export AWS_HOST=<aws_host>
+$ export AWS_PORT=<aws_port>
+$ export AWS_DB=<aws_db>
+```
+
+Finally, the main query script can be run with `$ python3 query_cluster.py`. The script prints on the console the
+results of the questions asked for the data analysis. It also saves those results as CSV files in the "Results" folder,
+alongside the generated graphs that were asked in some of the questions.
+
+## Results
+
+
+## Deleting used AWS resources
 
 x Instalado AWS CLI
 x Copiar arquivos baixados pro S3
@@ -264,10 +296,10 @@ x Criar o cluster Redshift (publicly available)
 x Atribuir o Role ao Cluster
 x Setar inbound permissions o security group
 x Queries que criam e copiar tabelas (com ARN)
-Remover o 'Foo' da payment_lookup
+x Remover o 'Foo' da payment_lookup
 
-Configurar ambiente python (incluindo variáveis de ambiente)
-Executar scripts
+x Configurar ambiente python (incluindo variáveis de ambiente)
+x Executar scripts
 Usar os Results para montar a página de Analysis
 
 Deletar recursos usados da AWS
