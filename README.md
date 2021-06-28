@@ -302,20 +302,3 @@ In the same way, the data stored in the S3 buckets can be deleted. Note that the
 $ aws s3 rm s3://my-bucket --recursive
 $ aws s3api delete-bucket --bucket my-bucket --region us-east-2
 ```
-
-x Instalado AWS CLI
-x Copiar arquivos baixados pro S3
-x Investigar tabelas para schemas
-x Upar também o jsonpaths
-x Criar o IAM Role para ler S3
-x Criar o cluster Redshift (publicly available)
-x Atribuir o Role ao Cluster
-x Setar inbound permissions o security group
-x Queries que criam e copiar tabelas (com ARN)
-x Remover o 'Foo' da payment_lookup
-
-x Configurar ambiente python (incluindo variáveis de ambiente)
-x Executar scripts
-x Usar os Results para montar a página de Analysis
-
-x Deletar recursos usados da AWS
