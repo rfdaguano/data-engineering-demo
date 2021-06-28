@@ -54,18 +54,21 @@ queries = [
 ]
 
 # Question 1
+# What is the average distance traveled by trips with a maximum of 2 passengers?
 question1 = pd.read_sql(queries[0], engine)
 question1.to_csv('Results/question1.csv', index=False)
 question1 = pd.read_csv('Results/question1.csv')
 print(question1)
 
 # Question 2
+# Which are the 3 biggest vendors based on the total amount of money raised?
 question2 = pd.read_sql(queries[1], engine)
 question2.to_csv('Results/question2.csv', index=False)
 question2 = pd.read_csv('Results/question2.csv')
 print(question2)
 
 # Question 3
+# Make a histogram of the monthly distribution over 4 years of rides paid with cash
 question3a = pd.read_sql(queries[2], engine)
 question3a.to_csv('Results/question3a.csv', index=False)
 question3a = pd.read_csv('Results/question3a.csv', index_col=['month', 'year'])
@@ -91,6 +94,7 @@ plt.savefig('Results/question3.png')
 print(question3)
 
 # Question 4
+# Make a time series chart computing the number of tips each day for the last 3 months of 2012
 question4a = pd.read_sql(queries[4], engine)
 question4a.to_csv('Results/question4a.csv', index=False)
 question4a = pd.read_csv('Results/question4a.csv', index_col='date')
@@ -114,6 +118,7 @@ plt.savefig('Results/question4b_bar.png')
 print(question4b)
 
 # Question 5
+# What is the average trip time on Saturdays and Sundays?
 question5 = pd.read_sql(queries[6], engine)
 question5.to_csv('Results/question5.csv', index=False)
 question5 = pd.read_csv('Results/question5.csv')
