@@ -284,8 +284,24 @@ alongside the generated graphs that were asked in some of the questions.
 
 ## Results
 
+The data analysis of the NYC Taxi Trips data is in the `Analysis.html` file and uses the results listed in the "Results"
+folder.
 
 ## Deleting used AWS resources
+
+After the compiling of results for the data analysis, the resources allocated from AWS can be deleted to avoid costs.
+The created Redshift cluster can be deleted with the command below:
+
+```
+$ aws redshift delete-cluster --cluster-identifier mycluster --final-cluster-snapshot-identifier myfinalsnapshot
+```
+
+In the same way, the data stored in the S3 buckets can be deleted. Note that the bucket must be emptied first:
+
+```
+$ aws s3 rm s3://my-bucket --recursive
+$ aws s3api delete-bucket --bucket my-bucket --region us-east-2
+```
 
 x Instalado AWS CLI
 x Copiar arquivos baixados pro S3
@@ -300,6 +316,6 @@ x Remover o 'Foo' da payment_lookup
 
 x Configurar ambiente python (incluindo variáveis de ambiente)
 x Executar scripts
-Usar os Results para montar a página de Analysis
+x Usar os Results para montar a página de Analysis
 
-Deletar recursos usados da AWS
+x Deletar recursos usados da AWS
