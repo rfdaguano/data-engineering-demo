@@ -12,15 +12,18 @@ url = f"postgresql://{aws_user}:{aws_password}@{aws_host}:{aws_port}/{aws_db}"
 
 engine = create_engine(url)
 queries = [
+    # Question 1
     """select avg(trip_distance) from trips
     where passenger_count <= 2;""",
 
+    # Question 2
     """select vendors.name as Vendor, sum(total_amount) as Total from trips
     join vendors on trips.vendor_id=vendors.vendor_id
     group by Vendor
     order by total desc
     limit 3;""",
 
+    # Question 3
     """select count(*) as Cash_Only, Datepart(Month,pickup_datetime) as Month, Datepart(Year, pickup_datetime) as Year from trips
     join payment on payment.payment_type=trips.payment_type
     where payment_lookup = 'Cash'
@@ -35,6 +38,7 @@ queries = [
     order by Year, Month
     ;""",
 
+    # Question 4
     """select count(*) as Tips, Datepart(dayofyear, pickup_datetime) as Date from trips
     where tip_amount > 0
     and Datepart(Year,pickup_datetime) = 2012 and Datepart(Month,pickup_datetime) between 10 and 12
@@ -49,6 +53,7 @@ queries = [
     order by Month, Day
     ;""",
 
+    # Question 5
     """select avg(datediff(seconds, pickup_datetime, dropoff_datetime)) as Average_sec from trips
     where date_part(weekday, pickup_datetime) in (6, 0);"""
 ]
@@ -123,5 +128,3 @@ question5 = pd.read_sql(queries[6], engine)
 question5.to_csv('Results/question5.csv', index=False)
 question5 = pd.read_csv('Results/question5.csv')
 print(question5)
-
-#TODO Extra Geolocation
