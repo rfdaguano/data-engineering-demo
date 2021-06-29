@@ -33,7 +33,7 @@
     </p>
   </div>
   <div>
-    <img src="Results/question3.png" alt="New York City">
+    <img src="img/nyc-street.jpg" alt="New York City" width="600">
   </div>
 </div>
 
@@ -49,23 +49,31 @@
   processing of data was conducted and what tools were used, see the <b>README.md</b> file.
 </p>
 
+<p>
+  *A quick result from the query <code>select count(*) from trips;</code>
+</p>
+
 <h1>Questions</h1>
+For all the referenced queries, the database is loaded with data from the years 2009-2012
 
 <h2>1. What is the average distance traveled by trips with a maximum of 2 passengers?</h2>
 <p>
-  a
+  The query below results in an average distance of 2.66 miles.
 </p>
+<pre>
 <codeblock>
   select avg(trip_distance) from trips
   where passenger_count <= 2;
 </codeblock>
+</pre>
 
 <h2>2. Which are the 3 biggest vendors based on the total amount of money raised?</h2>
 <div>
   <div>
     <p>
-      a
+      The next table is the direct result of the query:
     </p>
+    <pre>
     <code>
       select vendors.name as Vendor, sum(total_amount) as Total from trips
       join vendors on trips.vendor_id=vendors.vendor_id
@@ -73,30 +81,33 @@
       order by total desc
       limit 3;
     </code>
+    </pre>
   </div>
   <div>
     <table>
+      <thead>
+        <th>
+          <td>Position</td>
+          <td>Vendor</td>
+          <td>Total Revenue</td>
+        </th>
+      </thead>
       <tbody>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
+        <tr>
+          <td>1.</td>
+          <td>Creative Mobile Technologies, LLC</td>
+          <td>$$$</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>VeriFone Inc</td>
+          <td>$$$</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Dependable Driver Service, Inc</td>
+          <td>$$$</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -129,6 +140,7 @@
 <p>
   a
 </p>
+<pre>
 <code>
   select count(*) as Tips, Datepart(dayofyear, pickup_datetime) as Date from trips
   where tip_amount > 0
@@ -144,6 +156,7 @@
   order by Month, Day
   ;
 </code>
+</pre>
 
 <h2>5. What is the average trip time on Saturdays and Sundays?</h2>
 
