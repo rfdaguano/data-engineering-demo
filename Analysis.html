@@ -8,10 +8,16 @@
   <meta name="description" content="Analysis of NYC Taxi Trips 2009-2012">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="css/style.css" rel="stylesheet">
+  <style>
+    body {background-color: powderblue;}
+    h1   {color: blue;}
+    p    {color: red;}
+  </style>
 </head>
 
 <body>
+<h1>Data Engineering Demo</h1>
+by Rodrigo Daguano
 <h1>The Scenario</h1>
 <div>
   <div>
@@ -50,28 +56,31 @@
 </p>
 
 <p>
-  *A quick result from the query <code>select count(*) from trips;</code>
+  *The number is a quick result from the query <code>select count(*) from trips;</code>
 </p>
 
 <h1>Questions</h1>
-For all the referenced queries, the database is loaded with data from the years 2009-2012
+For all the queries, the database is loaded with data from the years 2009-2012
 
 <h2>1. What is the average distance traveled by trips with a maximum of 2 passengers?</h2>
 <p>
   The query below results in an average distance of 2.66 miles.
 </p>
 <pre>
-<codeblock>
-  select avg(trip_distance) from trips
-  where passenger_count <= 2;
-</codeblock>
+  <codeblock>
+    select avg(trip_distance) from trips
+    where passenger_count <= 2;
+  </codeblock>
 </pre>
 
 <h2>2. Which are the 3 biggest vendors based on the total amount of money raised?</h2>
 <div>
   <div>
     <p>
-      The next table is the direct result of the query:
+      The next table is the direct result of the query. As calculated, Creative Mobile Technologies, LLC is the
+      largest vendor, with a total revenue of over $19.5 million in the 4-year period; followed closely by Verifone
+      Inc, also above $19 million. The third largest vendor is Dependable Driver Service, Inc, with a revenue
+      of just over $2.7 million, more than 6 times smaller than the second place.
     </p>
     <pre>
     <code>
@@ -86,28 +95,28 @@ For all the referenced queries, the database is loaded with data from the years 
   <div>
     <table>
       <thead>
-        <th>
-          <td>Position</td>
-          <td>Vendor</td>
-          <td>Total Revenue</td>
-        </th>
+      <th>
+      <td>Position</td>
+      <td>Vendor</td>
+      <td>Total Revenue</td>
+      </th>
       </thead>
       <tbody>
-        <tr>
-          <td>1.</td>
-          <td>Creative Mobile Technologies, LLC</td>
-          <td>$$$</td>
-        </tr>
-        <tr>
-          <td>2.</td>
-          <td>VeriFone Inc</td>
-          <td>$$$</td>
-        </tr>
-        <tr>
-          <td>3.</td>
-          <td>Dependable Driver Service, Inc</td>
-          <td>$$$</td>
-        </tr>
+      <tr>
+        <td>1.</td>
+        <td>Creative Mobile Technologies, LLC</td>
+        <td>$19,549,084.27</td>
+      </tr>
+      <tr>
+        <td>2.</td>
+        <td>VeriFone Inc</td>
+        <td>$19,043,434.00</td>
+      </tr>
+      <tr>
+        <td>3.</td>
+        <td>Dependable Driver Service, Inc</td>
+        <td>$2,714,901.72</td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -116,8 +125,15 @@ For all the referenced queries, the database is loaded with data from the years 
 
 <h2>3. Make a histogram of the monthly distribution over 4 years of rides paid with cash</h2>
 <p>
-  a
+  The two queries below are combined in histogram between rides paid with cash and rides paid by other methods. Note
+  that there is data missing for some months, namely November 2011, November 2012 and December 2012.
 </p>
+<p>
+  Visual inspection shows that the ratio between cash/not cash rides is steady along the whole period, and that there
+  are drops in the overall number of rides around the end of the year, with the minimums recorded in December 2009
+  and December 2010.
+</p>
+<pre>
 <code>
   select count(*) as Cash_Only, Datepart(Month,pickup_datetime) as Month, Datepart(Year, pickup_datetime) as Year from trips
   join payment on payment.payment_type=trips.payment_type
@@ -133,13 +149,17 @@ For all the referenced queries, the database is loaded with data from the years 
   order by Year, Month
   ;
 </code>
+</pre>
 
-<img src="Results/question3.png" alt="Girl in a jacket">
+<img src="Results/question3.png" alt="alt_text" width="600">
 
 <h2>4. Make a time series chart computing the number of tips each day for the last 3 months of 2012</h2>
 <p>
-  a
+  Two queries are presented to get the time series from the database, the difference being that the first uses the
+  day of the year as an integer index for the data, while the second query results in a multi-level index of the pair
+  (Day, Month). The indexing style of the first query is used for the image below.
 </p>
+
 <pre>
 <code>
   select count(*) as Tips, Datepart(dayofyear, pickup_datetime) as Date from trips
@@ -158,15 +178,22 @@ For all the referenced queries, the database is loaded with data from the years 
 </code>
 </pre>
 
+<img src="Results/question4a_line.png" alt="alt_text" width="600">
+
+
 <h2>5. What is the average trip time on Saturdays and Sundays?</h2>
 
 <p>
-  Hello, world!
+  The next query results in the average duration of 524 seconds (or 8 minutes and 44 seconds) for the trips in the
+  weekends of the whole period. For the calculation it was assumed that the valid trips started between 00:00:00 on the
+  Saturday and 23:59:59 on the Sunday.
 </p>
+<pre>
 <code>
   select avg(datediff(seconds, pickup_datetime, dropoff_datetime)) as Average_sec from trips
   where date_part(weekday, pickup_datetime) in (6, 0);
 </code>
+</pre>
 
 </body>
 
