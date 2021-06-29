@@ -14,7 +14,15 @@
       background-color: white;
     }
 
-    h1, figure {text-align: center;}
+    table, th, td {
+    border: 1px solid black;
+    }
+
+    .table-box {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h1, figure, table {text-align: center;}
     h1 {color: rgb(70, 70, 70)}
     h2 {color: rgb(128, 128, 128);}
     code {
@@ -67,7 +75,7 @@
   processing of data was conducted and what tools were used, see the <b>README.md</b> file.
 </p>
 
-<p>
+<p class="remark">
   *The number is a quick result from the query <code>select count(*) from trips;</code>
 </p>
 
@@ -79,10 +87,10 @@ For all the queries, the database is loaded with data from the years 2009-2012
   The query below results in an average distance of 2.66 miles.
 </p>
 <pre>
-  <code>
-    select avg(trip_distance) from trips
-    where passenger_count <= 2;
-  </code>
+<code>
+  select avg(trip_distance) from trips
+  where passenger_count <= 2;
+</code>
 </pre>
 
 
@@ -95,17 +103,17 @@ For all the queries, the database is loaded with data from the years 2009-2012
       Inc, also above $19 million. The third largest vendor is Dependable Driver Service, Inc, with a revenue
       of just over $2.7 million, more than 6 times smaller than the second place.
     </p>
-    <pre>
-    <code>
-      select vendors.name as Vendor, sum(total_amount) as Total from trips
-      join vendors on trips.vendor_id=vendors.vendor_id
-      group by Vendor
-      order by total desc
-      limit 3;
-    </code>
-    </pre>
+<pre>
+<code>
+  select vendors.name as Vendor, sum(total_amount) as Total from trips
+  join vendors on trips.vendor_id=vendors.vendor_id
+  group by Vendor
+  order by total desc
+  limit 3;
+</code>
+</pre>
   </div>
-  <div>
+  <div class="table-box">
     <table>
       <caption>Largest taxi vendors by revenue (2009-2012)</caption>
       <tbody>
@@ -132,7 +140,6 @@ For all the queries, the database is loaded with data from the years 2009-2012
       </tbody>
     </table>
   </div>
-
 </div>
 
 <h2>3. Make a histogram of the monthly distribution over 4 years of rides paid with cash</h2>
@@ -151,15 +158,13 @@ For all the queries, the database is loaded with data from the years 2009-2012
   join payment on payment.payment_type=trips.payment_type
   where payment_lookup = 'Cash'
   group by Month, Year
-  order by Year, Month
-  ;
+  order by Year, Month;
 
   select count(*) as Not_Cash, Datepart(Month,pickup_datetime) as Month, Datepart(Year, pickup_datetime) as Year from trips
   join payment on payment.payment_type=trips.payment_type
   where payment_lookup != 'Cash'
   group by Month, Year
-  order by Year, Month
-  ;
+  order by Year, Month;
 </code>
 </pre>
 <figure>
@@ -179,15 +184,13 @@ For all the queries, the database is loaded with data from the years 2009-2012
   where tip_amount > 0
   and Datepart(Year,pickup_datetime) = 2012 and Datepart(Month,pickup_datetime) between 10 and 12
   group by Date
-  order by Date
-  ;
+  order by Date;
 
   select count(*) as Tips, Datepart(Day,pickup_datetime) as Day, Datepart(Month, pickup_datetime) as Month from trips
   where tip_amount > 0
   and Datepart(Year,pickup_datetime) = 2012 and Datepart(Month,pickup_datetime) between 10 and 12
   group by Day, Month
-  order by Month, Day
-  ;
+  order by Month, Day;
 </code>
 </pre>
 
