@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    body {background-color: powderblue;}
+    body {background-color: white;}
     h1   {color: blue;}
     p    {color: red;}
   </style>
@@ -20,6 +20,9 @@
 by Rodrigo Daguano
 <h1>The Scenario</h1>
 <div>
+  <div>
+    <img src="img/nyc-street.jpg" alt="New York City" width="600">
+  </div>
   <div>
     <p>
       New York City is one of the world's most populous megacities with almost 20 million people in its metropolitan
@@ -38,9 +41,7 @@ by Rodrigo Daguano
       Manhattan Island.
     </p>
   </div>
-  <div>
-    <img src="img/nyc-street.jpg" alt="New York City" width="600">
-  </div>
+
 </div>
 
 <h1>The Data</h1>
@@ -77,7 +78,7 @@ For all the queries, the database is loaded with data from the years 2009-2012
 <div>
   <div>
     <p>
-      The next table is the direct result of the query. As calculated, Creative Mobile Technologies, LLC is the
+      The next table is the direct result of the query below. As calculated, Creative Mobile Technologies, LLC is the
       largest vendor, with a total revenue of over $19.5 million in the 4-year period; followed closely by Verifone
       Inc, also above $19 million. The third largest vendor is Dependable Driver Service, Inc, with a revenue
       of just over $2.7 million, more than 6 times smaller than the second place.
@@ -94,14 +95,13 @@ For all the queries, the database is loaded with data from the years 2009-2012
   </div>
   <div>
     <table>
-      <thead>
-      <th>
-      <td>Position</td>
-      <td>Vendor</td>
-      <td>Total Revenue</td>
-      </th>
-      </thead>
+      <caption>Largest taxi vendors by revenue (2009-2012)</caption>
       <tbody>
+      <tr>
+        <td>Position</td>
+        <td>Vendor</td>
+        <td>Total Revenue</td>
+      </tr>
       <tr>
         <td>1.</td>
         <td>Creative Mobile Technologies, LLC</td>
@@ -150,9 +150,10 @@ For all the queries, the database is loaded with data from the years 2009-2012
   ;
 </code>
 </pre>
-
-<img src="Results/question3.png" alt="alt_text" width="600">
-
+<figure>
+  <img src="Results/question3.png" width="600">
+  <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
+</figure>
 <h2>4. Make a time series chart computing the number of tips each day for the last 3 months of 2012</h2>
 <p>
   Two queries are presented to get the time series from the database, the difference being that the first uses the
@@ -178,8 +179,10 @@ For all the queries, the database is loaded with data from the years 2009-2012
 </code>
 </pre>
 
-<img src="Results/question4a_line.png" alt="alt_text" width="600">
-
+<figure>
+  <img src="Results/question4a_line.png" width="600">
+  <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
+</figure>
 
 <h2>5. What is the average trip time on Saturdays and Sundays?</h2>
 
